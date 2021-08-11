@@ -45,7 +45,7 @@ namespace OneDriveDuplicates
             var appId = oauthSettings.GetString("AppId");
             var scopes = oauthSettings.GetString("Scopes").Split(' ');
 
-            var webAccountProviderConfig = new WebAccountProviderConfig(WebAccountProviderType.Msa, appId);
+            var webAccountProviderConfig = new WebAccountProviderConfig(WebAccountProviderType.Any, appId);
 
             Guid settingsCommandId = Guid.NewGuid();
             void OnSettingsCommandInvoked(IUICommand command)

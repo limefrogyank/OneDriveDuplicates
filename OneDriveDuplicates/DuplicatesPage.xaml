@@ -145,9 +145,9 @@
                           Visibility="{x:Bind ViewModel.ReversedIncludeSubfolders, Mode=OneWay}"
                           ItemsSource="{x:Bind ViewModel.SelectedDupe.DuplicateItems, Mode=OneWay}"
                           SelectionMode="None"
-                          BorderBrush="Black">
+                          BorderBrush="{ThemeResource CheckBoxBorderThemeBrush}">
                     <ListView.BorderThickness>
-                        <Thickness>3,3,0,0</Thickness>
+                        <Thickness>0,2,0,0</Thickness>
                     </ListView.BorderThickness>
                     <ListView.ItemContainerStyle>
                         <Style TargetType="ListViewItem">
