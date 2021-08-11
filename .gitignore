@@ -363,4 +363,4 @@ MigrationBackup/
 FodyWeavers.xsd
 
 # Auth Keys
-**/OAuth.resw
+OneDriveDuplicates/OAuth.resw
