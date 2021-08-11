@@ -31,6 +31,7 @@ namespace OneDriveDuplicates.ViewModel
 
         public FolderViewModel LastSelectedItem { get; set; }
         [Reactive] public DupeViewModel SelectedDupe { get; set; }
+        [Reactive] public DupeViewModel SelectedGroupedDupe { get; set; }
         [Reactive] public bool IncludeSubfolders { get; set;  }
 
         public bool ReversedIncludeSubfolders => reversedIncludeSubfolders.Value;
@@ -38,6 +39,7 @@ namespace OneDriveDuplicates.ViewModel
 
         public ReactiveCommand<Unit,Unit> FindDupesCommand { get; set; }
         public ReactiveCommand<Unit, Unit> ConsolidateToShortestNameCommand { get; set; }
+        public ReactiveCommand<Unit, Unit> ConsolidateGroupsToShortestNameCommand { get; set; }
 
         public string UrlPathSegment => "DuplicatesPage";
 
@@ -49,6 +51,7 @@ namespace OneDriveDuplicates.ViewModel
 
             var filteredDupes = files.Connect()
                 .Transform(x => new ModdedDriveItem(x))
+                .Filter(x => x.Hash != null)
                 .Group(x => x.Hash)
                 .Transform(x => new ViewModel.DupeViewModel(x))
                 .Filter(Observable.Return<Func<DupeViewModel, bool>>(y => y.Count > 1), files.CountChanged.Select(x => Unit.Default))
@@ -59,9 +62,15 @@ namespace OneDriveDuplicates.ViewModel
                 .Subscribe();
             Duplicates = duplicates;
 
-            filteredDupes.Group(x => x.ParentReference.Id)
-                .Transform(x => new ViewModel.CommonFolderGroupedDupesViewModel(x))
-                .Bind(out var groupedDuplicates)
+            var groupedFiltered = files.Connect()
+                .Transform(x => new ModdedDriveItem(x))
+                .Filter(x => x.Hash != null)
+                .Group(x => x.ParentReference.Id)
+                .Transform(x => new ViewModel.CommonFolderGroupedDupesViewModel(x, files))
+                .Filter(Observable.Return<Func<CommonFolderGroupedDupesViewModel, bool>>(y => y.Children.Count > 0), files.CountChanged.Select(x => Unit.Default))
+                .RefCount();
+
+            groupedFiltered.Bind(out var groupedDuplicates)
                 .Subscribe();
             GroupedDuplicates = groupedDuplicates;
 
@@ -88,9 +97,13 @@ namespace OneDriveDuplicates.ViewModel
                 return Unit.Default;
             });
 
+
+            var nongroupedPlan = filteredDupes.ToCollection().Select(x => x.Count > 0 ? true : false).And(FindDupesCommand.CanExecute).Then((x, y) => x && y);
+
             ConsolidateToShortestNameCommand = ReactiveCommand.CreateFromTask<Unit, Unit>(async x =>
             {
                 var listToDelete = new List<string>();
+                                
                 foreach (var dupe in Duplicates)
                 {
                     var min = dupe.DuplicateItems.Min(x => x.Name.Length);
@@ -99,14 +112,44 @@ namespace OneDriveDuplicates.ViewModel
                     {
                         listToDelete.Add(item.Id);
                     }
-                }
+                }                    
+                
                 if (listToDelete.Count > 0)
                 {
                     await scanner.DeleteBatchFileAsync(listToDelete);
                 }
                 files.Clear();
                 return Unit.Default;
-            }, filteredDupes.ToCollection().Select(x => x.Count > 0 ? true : false));
+            }, Observable.When(nongroupedPlan));
+
+            var groupPlan = groupedFiltered.ToCollection().Select(x => x.Count > 0 ? true : false).And(FindDupesCommand.CanExecute).Then((x, y) => x && y);
+
+            ConsolidateGroupsToShortestNameCommand = ReactiveCommand.CreateFromTask<Unit, Unit>(async x =>
+            {
+                var listToDelete = new List<string>();
+
+                foreach (var group in GroupedDuplicates)
+                {
+                    foreach (var dupe in group.Children)
+                    {
+                        var min = dupe.DuplicateItems.Min(x => x.Name.Length);
+                        var shortest = dupe.DuplicateItems.FirstOrDefault(x => x.Name.Length == min);
+                        foreach (var item in dupe.DuplicateItems.Except(new[] { shortest }))
+                        {
+                            listToDelete.Add(item.Id);
+                        }
+                    }
+                }
+               
+                if (listToDelete.Count > 0)
+                {
+                    await scanner.DeleteBatchFileAsync(listToDelete);
+                }
+                files.Clear();
+                return Unit.Default;
+            }, Observable.When(groupPlan));
+
+            
 
             Observable.FromAsync(async x =>
             {

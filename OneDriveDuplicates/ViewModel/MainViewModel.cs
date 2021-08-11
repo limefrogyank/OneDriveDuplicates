@@ -32,7 +32,7 @@ namespace OneDriveDuplicates.ViewModel
             // can use custom IViewLocator implementation,
             // see "View Location" section for details.
             //
-            Locator.CurrentMutable.Register(() => new HomePage(), typeof(IViewFor<WelcomePageViewModel>));
+            //Locator.CurrentMutable.Register(() => new HomePage(), typeof(IViewFor<WelcomePageViewModel>));
 
             // Manage the routing state. Use the Router.Navigate.Execute
             // command to navigate to different view models. 

@@ -44,26 +44,29 @@ namespace OneDriveDuplicates.Service
                 items = null;
             }
 
-            foreach (var item in items?.CurrentPage)
+            if (items != null)
             {
-                if (item.Folder != null)
-                    yield return item;
-            }
-
-            while (items.NextPageRequest != null)
-            {
-                try
-                {
-                    items = await items.NextPageRequest.GetAsync();
-                }
-                catch
-                {
-                    items = null;
-                }
                 foreach (var item in items?.CurrentPage)
                 {
                     if (item.Folder != null)
                         yield return item;
+                }
+
+                while (items.NextPageRequest != null)
+                {
+                    try
+                    {
+                        items = await items.NextPageRequest.GetAsync();
+                    }
+                    catch
+                    {
+                        items = null;
+                    }
+                    foreach (var item in items?.CurrentPage)
+                    {
+                        if (item.Folder != null)
+                            yield return item;
+                    }
                 }
             }
         }
@@ -92,7 +95,7 @@ namespace OneDriveDuplicates.Service
                 }
                 else
                 {
-                    request = request.Select(x => new { x.Id, x.File, x.Folder, x.Name, x.ParentReference });
+                    request = request.Select(x => new { x.Id, x.File, x.Folder, x.Name, x.ParentReference, x.CreatedDateTime, x.Size });
                 }
 
                 items = await request.Top(50)
@@ -100,26 +103,29 @@ namespace OneDriveDuplicates.Service
             }
             catch
             {
-                var i = 3;
+                items = null;
             }
 
-            foreach (var item in items.CurrentPage)
+            if (items != null)
             {
-                if (item.File != null)
-                    yield return item;
-                else if (item.Folder != null)
-                    folders.Add(item);
-            }
-
-            while (items.NextPageRequest != null)
-            {
-                items = await items.NextPageRequest.GetAsync();
                 foreach (var item in items.CurrentPage)
                 {
                     if (item.File != null)
                         yield return item;
                     else if (item.Folder != null)
                         folders.Add(item);
+                }
+
+                while (items.NextPageRequest != null)
+                {
+                    items = await items.NextPageRequest.GetAsync();
+                    foreach (var item in items.CurrentPage)
+                    {
+                        if (item.File != null)
+                            yield return item;
+                        else if (item.Folder != null)
+                            folders.Add(item);
+                    }
                 }
             }
 
@@ -143,8 +149,8 @@ namespace OneDriveDuplicates.Service
 
             while (sequence.Any())
             {
-                var batch = sequence.Take(10);
-                sequence = sequence.Skip(10);
+                var batch = sequence.Take(20);
+                sequence = sequence.Skip(20);
 
                 // do whatever you need to do with each batch here
 

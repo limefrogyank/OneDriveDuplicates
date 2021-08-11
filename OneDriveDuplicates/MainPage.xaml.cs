@@ -97,7 +97,7 @@ namespace OneDriveDuplicates
             
             var globalProvider = ProviderManager.Instance.GlobalProvider;
             SetAuthState(globalProvider != null && globalProvider.State == ProviderState.SignedIn);
-            ViewModel.Router.Navigate.Execute(new WelcomePageViewModel()).Subscribe();
+            ViewModel.Router.Navigate.Execute(new DuplicatesPageViewModel()).Subscribe();
             //RootFrame.Navigate(typeof(HomePage));
         }
 
@@ -112,9 +112,9 @@ namespace OneDriveDuplicates
         {
             (Application.Current as App).IsAuthenticated = isAuthenticated;
 
-            // Toggle controls that require auth
-            Calendar.IsEnabled = isAuthenticated;
-            NewEvent.IsEnabled = isAuthenticated;
+            //// Toggle controls that require auth
+            //Calendar.IsEnabled = isAuthenticated;
+            //NewEvent.IsEnabled = isAuthenticated;
         }
 
         private void NavView_ItemInvoked(NavigationView sender, NavigationViewItemInvokedEventArgs args)

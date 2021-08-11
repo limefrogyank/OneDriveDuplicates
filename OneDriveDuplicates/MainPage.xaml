@@ -18,16 +18,18 @@
     </Interactivity:Interaction.Behaviors>-->
 
     <Grid>
-        <NavigationView x:Name="NavView"
+        <rxui:RoutedViewHost x:Name="router" Router="{x:Bind ViewModel.Router}" />
+        
+        <!--<NavigationView x:Name="NavView"
             IsSettingsVisible="False"
             ItemInvoked="NavView_ItemInvoked">
 
             <NavigationView.Header>
                 <auth:LoginButton  VerticalAlignment="Top" 
                                  HorizontalAlignment="Right"/>
-                <!--<wgt:LoginButton x:Name="Login" 
+                --><!--<wgt:LoginButton x:Name="Login" 
                                  VerticalAlignment="Top" 
-                                 HorizontalAlignment="Right" />-->
+                                 HorizontalAlignment="Right" />--><!--
             </NavigationView.Header>
 
             <NavigationView.MenuItems>
@@ -55,9 +57,9 @@
 
             <Grid>
                 <rxui:RoutedViewHost x:Name="router" Router="{x:Bind ViewModel.Router}" />
-                <!--<Frame x:Name="RootFrame" Margin="24, 0" VerticalContentAlignment="Stretch"/>-->
+                --><!--<Frame x:Name="RootFrame" Margin="24, 0" VerticalContentAlignment="Stretch"/>--><!--
                 <controls:InAppNotification x:Name="Notification" ShowDismissButton="true" />
             </Grid>
-        </NavigationView>
+        </NavigationView>-->
     </Grid>
 </Page>

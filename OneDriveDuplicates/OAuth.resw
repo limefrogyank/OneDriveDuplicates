@@ -120,9 +120,6 @@
   <data name="AppId" xml:space="preserve">
     <value>aea1af1a-fb7d-4d16-8638-a101abd5db98</value>
   </data>
-  <data name="Backup" xml:space="preserve">
-    <value>User.Read User.ReadBasic.All Files.ReadWrite</value>
-  </data>
   <data name="Scopes" xml:space="preserve">
     <value>User.Read Files.ReadWrite</value>
   </data>

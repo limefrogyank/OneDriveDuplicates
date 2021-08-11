@@ -59,8 +59,14 @@
                                   IsOn="{x:Bind ViewModel.IncludeSubfolders, Mode=TwoWay}"
                                   />
                     <Button Style="{ThemeResource AccentButtonStyle}"
+                            Visibility="{x:Bind ViewModel.ReversedIncludeSubfolders, Mode=OneWay}"
                             Margin="5,0,0,0"
                             Command="{x:Bind ViewModel.ConsolidateToShortestNameCommand}"
+                            >Consolidate To Shortest Name</Button>
+                    <Button Style="{ThemeResource AccentButtonStyle}"
+                            Visibility="{x:Bind ViewModel.IncludeSubfolders, Mode=OneWay}"
+                            Margin="5,0,0,0"
+                            Command="{x:Bind ViewModel.ConsolidateGroupsToShortestNameCommand}"
                             >Consolidate To Shortest Name</Button>
                 </StackPanel>
                                 
@@ -83,18 +89,43 @@
                 </GridView>
 
                 <GridView ItemsSource="{Binding Source={StaticResource cvs}}" 
-                          HorizontalAlignment="Stretch"                           
+                          HorizontalAlignment="Stretch"           
+                          SelectedItem="{x:Bind ViewModel.SelectedGroupedDupe, Mode=TwoWay}"
                           HorizontalContentAlignment="Stretch"
-                          SelectedItem="{x:Bind ViewModel.SelectedDupe, Mode=TwoWay}"
                           Grid.Row="1"
                           Visibility="{x:Bind ViewModel.IncludeSubfolders, Mode=OneWay}"
                           >
+                    <GridView.ItemContainerStyle>
+                        <Style TargetType="GridViewItem" />
+                    </GridView.ItemContainerStyle>
                     <GridView.GroupStyle>
                         <GroupStyle>
+                            <GroupStyle.HeaderContainerStyle>
+                                <Style TargetType="GridViewHeaderItem">
+                                    <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                                </Style>
+                            </GroupStyle.HeaderContainerStyle>
                             <GroupStyle.HeaderTemplate>
                                 <DataTemplate x:DataType="vm:CommonFolderGroupedDupesViewModel">
-                                    <TextBlock Text="{Binding Name}" Margin="10,0"
-                                        Foreground="Black" FontWeight="Bold" />
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Text="{Binding Name}" 
+                                                   Margin="10,0"
+                                                   Style="{ThemeResource BaseTextBlockStyle}"
+                                                   Foreground="Black" 
+                                                   FontWeight="Light"
+                                                   FontSize="16"
+                                                   />
+                                        <StackPanel Orientation="Horizontal" 
+                                                    HorizontalAlignment="Right" 
+                                                    Grid.Column="1">
+                                            <Button Style="{ThemeResource AccentButtonStyle}"
+                                                    Command="{x:Bind ConsolidateToShortestNameCommand}">Keep Shortest Name</Button>
+                                        </StackPanel>
+                                    </Grid>
                                 </DataTemplate>
                             </GroupStyle.HeaderTemplate>
                         </GroupStyle>
@@ -111,10 +142,56 @@
                 </GridView>
 
                 <ListView Grid.Row="2"
-                          ItemsSource="{x:Bind ViewModel.SelectedDupe.DuplicateItems, Mode=OneWay}">
+                          Visibility="{x:Bind ViewModel.ReversedIncludeSubfolders, Mode=OneWay}"
+                          ItemsSource="{x:Bind ViewModel.SelectedDupe.DuplicateItems, Mode=OneWay}"
+                          SelectionMode="None"
+                          BorderBrush="Black">
+                    <ListView.BorderThickness>
+                        <Thickness>3,3,0,0</Thickness>
+                    </ListView.BorderThickness>
+                    <ListView.ItemContainerStyle>
+                        <Style TargetType="ListViewItem">
+                            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                        </Style>
+                    </ListView.ItemContainerStyle>
                     <ListView.ItemTemplate>
                         <DataTemplate x:DataType="model:ModdedDriveItem">
-                            <TextBlock Text="{x:Bind Name}" />
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition />
+                                    <ColumnDefinition />
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Text="{x:Bind Name}" />
+                                <TextBlock Text="{x:Bind CreatedDateTime}" Grid.Column="1" HorizontalAlignment="Right" />
+                            </Grid>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+                
+                <ListView Grid.Row="2"
+                          SelectionMode="None"
+                          Visibility="{x:Bind ViewModel.IncludeSubfolders, Mode=OneWay}"
+                          ItemsSource="{x:Bind ViewModel.SelectedGroupedDupe.DuplicateItems, Mode=OneWay}"
+                          BorderBrush="{ThemeResource CheckBoxBorderThemeBrush}"
+                          Header="Details">
+                    <ListView.BorderThickness>
+                        <Thickness>0,2,0,0</Thickness>
+                    </ListView.BorderThickness>
+                    <ListView.ItemContainerStyle>
+                        <Style TargetType="ListViewItem">
+                            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                        </Style>
+                    </ListView.ItemContainerStyle>
+                    <ListView.ItemTemplate>
+                        <DataTemplate x:DataType="model:ModdedDriveItem">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition />
+                                    <ColumnDefinition />
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Text="{x:Bind Name}" />
+                                <TextBlock Text="{x:Bind CreatedDateTime}" Grid.Column="1" HorizontalAlignment="Right" />
+                            </Grid>
                         </DataTemplate>
                     </ListView.ItemTemplate>
                 </ListView>

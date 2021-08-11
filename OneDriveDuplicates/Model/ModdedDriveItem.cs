@@ -14,6 +14,10 @@ namespace OneDriveDuplicates.Model
         public string Hash { get; set; }
         public string Name => File.Name;
         public string Id => File.Id;
+
+        public long Size => File.Size.HasValue ? File.Size.Value : 0;
+
+        public DateTimeOffset? CreatedDateTime => File.CreatedDateTime.HasValue ? File.CreatedDateTime.Value : DateTimeOffset.Now;
         public ItemReference ParentReference => File.ParentReference;
 
         public ModdedDriveItem(DriveItem item)
@@ -28,7 +32,11 @@ namespace OneDriveDuplicates.Model
                 else if (!string.IsNullOrWhiteSpace(item.File.Hashes.Sha1Hash))
                 {
                     Hash = item.File.Hashes.Sha1Hash;
-                } 
+                }
+                else if (!string.IsNullOrWhiteSpace(item.File.Hashes.Crc32Hash))
+                {
+                    Hash = item.File.Hashes.Crc32Hash;
+                }
                 else if (!string.IsNullOrWhiteSpace(item.File.Hashes.QuickXorHash))
                 {
                     Hash = item.File.Hashes.QuickXorHash;
@@ -41,6 +49,7 @@ namespace OneDriveDuplicates.Model
             else
             {
                 Debug.WriteLine($"{item.Name} has no hashes.");
+                // Need to filter out null hashes or else DynamicData will crash.
             }
         }
     }
