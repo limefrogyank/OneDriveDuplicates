@@ -123,4 +123,7 @@
   <data name="Scopes" xml:space="preserve">
     <value>User.Read Files.ReadWrite</value>
   </data>
+  <data name="test" xml:space="preserve">
+    <value>dd</value>
+  </data>
 </root>
