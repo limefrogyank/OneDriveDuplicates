@@ -67,7 +67,7 @@
                             Visibility="{x:Bind ViewModel.IncludeSubfolders, Mode=OneWay}"
                             Margin="5,0,0,0"
                             Command="{x:Bind ViewModel.ConsolidateGroupsToShortestNameCommand}"
-                            >Consolidate To Shortest Name</Button>
+                            >Consolidate ALL To Shortest Name</Button>
                 </StackPanel>
                                 
                 <GridView ItemsSource="{x:Bind ViewModel.Duplicates, Mode=OneWay}" 
