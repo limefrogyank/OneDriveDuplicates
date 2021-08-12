@@ -1,5 +1,7 @@
 # Privacy Policy
 
+This app is known as "Cloud Duplicate Finder" in the store because it can't use a brand name in the title.
+
 This app connects to your Office account via an OAuth login.  That means your login and password are never shared with the app.  Only Windows manages the communication to get access.
 
 This app requires read/write access to your OneDrive account to function.  This app will only read file and folder names, sizes of files, creation date and cryptographic hashes.  None of these are stored in a cache file and will disappear as soon as the app is closed.  The app will *never* download a file's contents.  
