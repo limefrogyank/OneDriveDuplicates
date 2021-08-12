@@ -12,8 +12,7 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
-using Microsoft.Graph;
-using Newtonsoft.Json;
+
 using Microsoft.Toolkit.Uwp.UI.Controls;
 using System.Diagnostics;
 using OneDriveDuplicates.Service;

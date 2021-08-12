@@ -54,7 +54,10 @@ namespace OneDriveDuplicates.ViewModel
                         Name = decoded.Substring(decoded.IndexOf(':') + 1) + "/" + first.ParentReference.Name;
 
                         var folder = await scanner.GetFolderAsync(first.ParentReference.Id);
-                        Uri = new Uri(folder.WebUrl);
+                        if (folder != null)
+                        {
+                            Uri = new Uri(folder.WebUrl);
+                        }
                     }
                 });
 

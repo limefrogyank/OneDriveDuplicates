@@ -15,8 +15,6 @@ using Windows.UI.Xaml.Navigation;
 using Microsoft.Graph;
 
 using Microsoft.Toolkit.Uwp.UI.Controls;
-using Newtonsoft.Json;
-using CommunityToolkit.Authentication;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
 
