@@ -62,12 +62,19 @@ namespace OneDriveDuplicates.ViewModel
         private async void LoadImage(string id)
         {
             var graphClient = ProviderManager.Instance.GlobalProvider.GetClient();
-            var thumbnails = await graphClient.Me.Drive.Items[id].Thumbnails.Request().GetAsync();
-            var thumbnail = thumbnails.FirstOrDefault();
-            if (thumbnail != null)
+            try
             {
-                imageUri = thumbnail.Medium.Url;
-                this.RaisePropertyChanged("ImageUri");
+                var thumbnails = await graphClient.Me.Drive.Items[id].Thumbnails.Request().GetAsync();
+                var thumbnail = thumbnails.FirstOrDefault();
+                if (thumbnail != null)
+                {
+                    imageUri = thumbnail.Medium.Url;
+                    this.RaisePropertyChanged("ImageUri");
+                }
+            }
+            catch
+            {
+
             }
         }
 

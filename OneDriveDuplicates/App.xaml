@@ -4,4 +4,27 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:OneDriveDuplicates">
 
+    <!--<Application.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.ThemeDictionaries>
+                <ResourceDictionary x:Key="Default">
+                    <SolidColorBrush x:Key="myBrush" Color="Black"/>
+                    <SolidColorBrush x:Key="myBrushOutline" Color="White"/>
+                </ResourceDictionary>
+                <ResourceDictionary x:Key="Light">
+                    <SolidColorBrush x:Key="myBrush" Color="Black"/>
+                    <SolidColorBrush x:Key="myBrushOutline" Color="White"/>
+                </ResourceDictionary>
+                <ResourceDictionary x:Key="Dark">
+                    <SolidColorBrush x:Key="myBrush" Color="White"/>
+                    <SolidColorBrush x:Key="myBrushOutline" Color="Black"/>
+                </ResourceDictionary>
+                <ResourceDictionary x:Key="HighContrast">
+                    <SolidColorBrush x:Key="myBrush" Color="White"/>
+                    <SolidColorBrush x:Key="myBrushOutline" Color="Black"/>
+                </ResourceDictionary>
+            </ResourceDictionary.ThemeDictionaries>
+        </ResourceDictionary>
+    </Application.Resources>-->
+    
 </Application>

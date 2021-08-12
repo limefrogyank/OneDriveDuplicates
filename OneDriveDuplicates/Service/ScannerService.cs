@@ -71,6 +71,21 @@ namespace OneDriveDuplicates.Service
             }
         }
 
+        public async Task<DriveItem> GetFolderAsync(string id)
+        {
+            try
+            {
+                var result = await graphClient.Me.Drive.Items[id].Request()
+                    .Select(x => x.WebUrl)
+                    .GetAsync();
+                return result;
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
         public async IAsyncEnumerable<DriveItem> GetFilesInFolder(string folderId=null, bool includeSubFolders=false)
         {
             List<DriveItem> folders = new List<DriveItem>();

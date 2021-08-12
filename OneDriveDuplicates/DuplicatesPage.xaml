@@ -8,14 +8,21 @@
     mc:Ignorable="d"
     xmlns:vm="using:OneDriveDuplicates.ViewModel"
     xmlns:model="using:OneDriveDuplicates.Model"
+    xmlns:toolkit="using:Microsoft.Toolkit.Uwp.UI.Controls"
+    xmlns:controls="using:OneDriveDuplicates.Controls"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
     <Page.Resources>
-        <model:UriImageConverter x:Key="UriImageConverter"/>
-        <CollectionViewSource x:Key="cvs" x:Name="cvs" 
+
+        <ResourceDictionary>
+            <model:UriImageConverter x:Key="UriImageConverter"/>
+            <CollectionViewSource x:Key="cvs" x:Name="cvs" 
                               IsSourceGrouped="True"
                               Source="{x:Bind ViewModel.GroupedDuplicates}"
                               ItemsPath="Children"/>
+            
+            
+        </ResourceDictionary>
     </Page.Resources>
 
     <SplitView IsPaneOpen="True" OpenPaneLength="256" DisplayMode="Inline">
@@ -43,7 +50,7 @@
             </Grid>
         </SplitView.Pane>
         <SplitView.Content>
-            <Grid>
+            <Grid Background="{ThemeResource SystemControlAcrylicWindowBrush}">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="2*"/>
@@ -51,7 +58,8 @@
                 </Grid.RowDefinitions>
 
                 <StackPanel Orientation="Horizontal" Padding="5">
-                    <Button Command="{x:Bind ViewModel.FindDupesCommand}">Find Dupes</Button>
+                    <Button Command="{x:Bind ViewModel.FindDupesCommand}"
+                            Foreground="{ThemeResource ApplicationForegroundThemeBrush}">Find Dupes</Button>
                     <ToggleSwitch Header="Subfolders"
                                   OnContent="Include"
                                   OffContent="Don't include"
@@ -75,14 +83,17 @@
                           HorizontalContentAlignment="Stretch"
                           SelectedItem="{x:Bind ViewModel.SelectedDupe, Mode=TwoWay}"
                           Grid.Row="1"
+                          Margin="0,0,0,8"
                           Visibility="{x:Bind ViewModel.ReversedIncludeSubfolders, Mode=OneWay}"
                           >
                     <GridView.ItemTemplate>
                         <DataTemplate x:DataType="vm:DupeViewModel">
                             <Grid Height="150" Width="150">
                                 <Image Source="{x:Bind ImageUri, Mode=OneWay, Converter={StaticResource UriImageConverter}}" />
-                                <TextBlock Text="{x:Bind Name}" />
-                                <TextBlock Text="{x:Bind Count}" HorizontalAlignment="Left" VerticalAlignment="Bottom" />
+                                <ContentControl Background="White">
+                                    <TextBlock Text="{x:Bind Name}" />
+                                </ContentControl>
+                                <TextBlock Text="{x:Bind Count}" HorizontalAlignment="Left" VerticalAlignment="Bottom"  />
                             </Grid>
                         </DataTemplate>
                     </GridView.ItemTemplate>
@@ -93,6 +104,7 @@
                           SelectedItem="{x:Bind ViewModel.SelectedGroupedDupe, Mode=TwoWay}"
                           HorizontalContentAlignment="Stretch"
                           Grid.Row="1"
+                          Margin="0,0,0,8"
                           Visibility="{x:Bind ViewModel.IncludeSubfolders, Mode=OneWay}"
                           >
                     <GridView.ItemContainerStyle>
@@ -112,13 +124,15 @@
                                             <ColumnDefinition Width="*"/>
                                             <ColumnDefinition Width="Auto"/>
                                         </Grid.ColumnDefinitions>
-                                        <TextBlock Text="{Binding Name}" 
+                                        <HyperlinkButton NavigateUri="{x:Bind Uri, Mode=OneWay}" >
+                                            <TextBlock Text="{Binding Name, Mode=OneWay}" 
                                                    Margin="10,0"
                                                    Style="{ThemeResource BaseTextBlockStyle}"
-                                                   Foreground="Black" 
                                                    FontWeight="Light"
                                                    FontSize="16"
                                                    />
+                                        </HyperlinkButton>
+                                        
                                         <StackPanel Orientation="Horizontal" 
                                                     HorizontalAlignment="Right" 
                                                     Grid.Column="1">
@@ -134,8 +148,16 @@
                         <DataTemplate x:DataType="vm:DupeViewModel">
                             <Grid Height="150" Width="150">
                                 <Image Source="{x:Bind ImageUri, Mode=OneWay, Converter={StaticResource UriImageConverter}}" />
-                                <TextBlock Text="{x:Bind Name}" />
-                                <TextBlock Text="{x:Bind Count}" HorizontalAlignment="Left" VerticalAlignment="Bottom" />
+                                <Grid VerticalAlignment="Top" HorizontalAlignment="Left"
+                                      Background="{ThemeResource SystemControlAcrylicElementBrush}" Padding="4">
+                                    <TextBlock Text="{x:Bind Name}" TextWrapping="Wrap"
+                                               Style="{ThemeResource CaptionTextBlockStyle}"/>
+                                </Grid>
+                                <Grid HorizontalAlignment="Left" VerticalAlignment="Bottom"
+                                      Padding="4" Background="{ThemeResource SystemControlAcrylicElementBrush}">
+                                    <TextBlock Text="{x:Bind Count}"
+                                               Style="{ThemeResource CaptionTextBlockStyle}"/>
+                                </Grid>
                             </Grid>
                         </DataTemplate>
                     </GridView.ItemTemplate>
@@ -145,10 +167,11 @@
                           Visibility="{x:Bind ViewModel.ReversedIncludeSubfolders, Mode=OneWay}"
                           ItemsSource="{x:Bind ViewModel.SelectedDupe.DuplicateItems, Mode=OneWay}"
                           SelectionMode="None"
+                          Margin="0,8,0,0"
                           BorderBrush="{ThemeResource CheckBoxBorderThemeBrush}">
-                    <ListView.BorderThickness>
+                    <!--<ListView.BorderThickness>
                         <Thickness>0,2,0,0</Thickness>
-                    </ListView.BorderThickness>
+                    </ListView.BorderThickness>-->
                     <ListView.ItemContainerStyle>
                         <Style TargetType="ListViewItem">
                             <Setter Property="HorizontalContentAlignment" Value="Stretch" />
@@ -169,14 +192,15 @@
                 </ListView>
                 
                 <ListView Grid.Row="2"
+                          Margin="0,8,0,0"
                           SelectionMode="None"
                           Visibility="{x:Bind ViewModel.IncludeSubfolders, Mode=OneWay}"
                           ItemsSource="{x:Bind ViewModel.SelectedGroupedDupe.DuplicateItems, Mode=OneWay}"
                           BorderBrush="{ThemeResource CheckBoxBorderThemeBrush}"
                           Header="Details">
-                    <ListView.BorderThickness>
+                    <!--<ListView.BorderThickness>
                         <Thickness>0,2,0,0</Thickness>
-                    </ListView.BorderThickness>
+                    </ListView.BorderThickness>-->
                     <ListView.ItemContainerStyle>
                         <Style TargetType="ListViewItem">
                             <Setter Property="HorizontalContentAlignment" Value="Stretch" />
@@ -195,6 +219,15 @@
                         </DataTemplate>
                     </ListView.ItemTemplate>
                 </ListView>
+                <toolkit:GridSplitter Grid.Row="2" 
+                                      Height="16"
+                                      ResizeDirection="Rows"
+                                      VerticalAlignment="Top"
+                                      ResizeBehavior="BasedOnAlignment">
+                    <toolkit:GridSplitter.RenderTransform>
+                        <TranslateTransform Y="-8" />
+                    </toolkit:GridSplitter.RenderTransform>
+                </toolkit:GridSplitter>
             </Grid>
         </SplitView.Content>
     </SplitView>

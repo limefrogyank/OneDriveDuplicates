@@ -5,6 +5,7 @@ using Microsoft.Graph;
 using OneDriveDuplicates.Model;
 using OneDriveDuplicates.Service;
 using ReactiveUI;
+using ReactiveUI.Fody.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -21,13 +22,17 @@ namespace OneDriveDuplicates.ViewModel
     {
         private ScannerService scanner;
 
-        public string Name { get; set; }
+        [Reactive] public string Name { get; set; }
+        [Reactive] public Uri Uri { get; set; }
         public ReadOnlyObservableCollection<DupeViewModel> Children { get; }
-
         public ReactiveCommand<Unit, Unit> ConsolidateToShortestNameCommand { get; set; }
 
         public CommonFolderGroupedDupesViewModel(IGroup<ModdedDriveItem, string, string> group, ISourceCache<DriveItem,string> source)
         {
+            var graphClient = ProviderManager.Instance.GlobalProvider.GetClient();
+            //var graphClient = MainPage.MsalProvider.GetClient();
+            scanner = new ScannerService(graphClient);
+
             var grouped = group.Cache.Connect()
                 .Group(x => x.Hash)
                 .Transform(x => new DupeViewModel(x))
@@ -39,14 +44,17 @@ namespace OneDriveDuplicates.ViewModel
                 .Subscribe();
             Children = children;
 
-            grouped.ToCollection()
-                .Subscribe(x =>
+            grouped.ToCollection().Take(1)
+                .Subscribe(async x =>
                 {
                     var first = x.FirstOrDefault();
                     if (first != null)
                     {
                         var decoded = HttpUtility.UrlDecode(first.ParentReference.Path);
                         Name = decoded.Substring(decoded.IndexOf(':') + 1) + "/" + first.ParentReference.Name;
+
+                        var folder = await scanner.GetFolderAsync(first.ParentReference.Id);
+                        Uri = new Uri(folder.WebUrl);
                     }
                 });
 
@@ -72,9 +80,7 @@ namespace OneDriveDuplicates.ViewModel
                 return Unit.Default;
             }, grouped.ToCollection().Select(x => x.Count > 0 ? true : false));
 
-            var graphClient = ProviderManager.Instance.GlobalProvider.GetClient();
-            //var graphClient = MainPage.MsalProvider.GetClient();
-            scanner = new ScannerService(graphClient);
+            
 
 
         }
