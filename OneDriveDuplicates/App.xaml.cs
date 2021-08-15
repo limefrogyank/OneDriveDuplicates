@@ -1,4 +1,5 @@
-﻿using ReactiveUI;
+﻿using OneDriveDuplicates.ViewModel;
+using ReactiveUI;
 using Splat;
 using System;
 using System.Collections.Generic;
@@ -34,7 +35,9 @@ namespace OneDriveDuplicates
         public App()
         {
             this.InitializeComponent();
-            Locator.CurrentMutable.RegisterViewsForViewModels(Assembly.GetCallingAssembly());
+            //Locator.CurrentMutable.RegisterViewsForViewModels(Assembly.GetCallingAssembly());
+            Locator.CurrentMutable.Register(() => new DuplicatesPage(), typeof(IViewFor<DuplicatesPageViewModel>));
+            //Locator.CurrentMutable.Register(() => new DuplicatesPageViewModel(), typeof(IRoutableViewModel), typeof(DuplicatesPageViewModel).FullName);
 
             //// Sdk comes from the OpenTelemetry namespace provided through the installation of the OpenTelemetry.Instrumentation.Http package
             //using var tracerProvider = Sdk.CreateTracerProviderBuilder()
