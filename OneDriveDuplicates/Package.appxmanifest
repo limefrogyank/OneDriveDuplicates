@@ -8,8 +8,8 @@
 
   <Identity
     Name="57059LMcPherson.CloudDuplicateFinder"
-    Publisher="CN=A0507F01-8350-49B5-AA41-01D3B1C58164"
-    Version="1.0.5.0" />
+    Publisher="CN=Lee McPherson"
+    Version="1.0.6.0" />
 
   <mp:PhoneIdentity PhoneProductId="e696da4f-66a1-4638-bda3-19c7b76802f9" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 

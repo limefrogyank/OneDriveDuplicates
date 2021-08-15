@@ -41,7 +41,7 @@ namespace OneDriveDuplicates
             notification.Show(message);
         }
 
-        protected override async void OnNavigatedTo(NavigationEventArgs e)
+        protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             // Get the Graph client from the provider
         //    var graphClient = ProviderManager.Instance.GlobalProvider;

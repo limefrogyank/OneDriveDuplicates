@@ -29,7 +29,7 @@ namespace OneDriveDuplicates
     /// </summary>
     public sealed partial class MainPage : Page
     {
-        public static MsalProvider MsalProvider { get; set; }
+        //public static MsalProvider MsalProvider { get; set; }
 
         public MainViewModel ViewModel { get; set; }
 
